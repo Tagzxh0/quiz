@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" style="font-size:15px; color: black; font-weight:bold;  background-color: #86b5d2ff; padding: 5px 5px; border: none; cursor: pointer;" onmouseover="this.style.backgroundColor='#07536cff'" onmouseout="this.style.backgroundColor='#86b5d2ff'" >Login</button>
+</form>
+
+<p>Don't have an account? <a href="{% url 'signup' %}" style="text-decoration:none; color: #43786fff; font-weight:bold;" onmouseover="this.style.color='#07536cff';" onmouseout="this.style.color='#43786fff';">Register here</a>.</p>
+{% endblock %}

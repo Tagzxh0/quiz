@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2>Welcome to the Quiz App</h2>
+<p>Select a topic to start the quiz:</p>
+
+<div class="topics-container">
+    <a href="{% url 'quiz_topic' 'database_management' %}" class="topic-box">
+        Database Management
+    </a>
+    <a href="{% url 'quiz_topic' 'system_analysis' %}" class="topic-box">
+        System Analysis and Design
+    </a>
+    <a href="{% url 'quiz_topic' 'artificial_intelligence' %}" class="topic-box">
+        Artificial Intelligence
+    </a>
+    <a href="{% url 'quiz_topic' 'technopreneurship' %}" class="topic-box">
+        Technopreneurship
+    </a>
+    <a href="{% url 'quiz_topic' 'compiler_design' %}" class="topic-box">
+        Compiler Design and Construction
+    </a>
+</div>
+{% endblock %}

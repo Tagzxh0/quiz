@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+  <h2 style="font-size: 39px; color: #43786fff; font-weight: bold;">Welcome to the Quiz App</h2>
+  <p style=" font-size:30px; color: #5d7a75ff; ">PLEASE</p> 
+  <p><a href="{% url 'login' %}" style=" font-size:35px; text-decoration:none; color: #43786fff; font-weight:bold;"onmouseover="this.style.color='#07536cff';" onmouseout="this.style.color='#43786fff';">Log in</a></p>
+  <p style=" font-size:30px;"> OR </p>
+  <p><a href="{% url 'signup' %}" style="font-size:35px; text-decoration:none; color: #43786fff; font-weight:bold; "onmouseover="this.style.color='#07536cff';" onmouseout="this.style.color='#43786fff';">Register</a></p>
+  <p style="font-size:30px; color: #5c7c76ff; ">To participate in quizzes.</p>
+{% endblock %}

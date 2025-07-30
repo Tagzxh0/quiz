@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Quiz Result{% endblock %}
+
+{% block content %}
+<div class="result-container">
+    <!-- ✅ Move audio tags here -->
+    <audio id="audio-yay" src="{% static 'css/audio/yay.wav' %}" preload="auto"></audio>
+    <audio id="audio-nice" src="{% static 'css/audio/nice.mp3' %}" preload="auto"></audio>
+    <audio id="audio-try" src="{% static 'css/audio/tryagain.mp3' %}" preload="auto"></audio>
+
+    <h2>Quiz Result for {{ topic }}</h2>
+    <p class="score">You scored <strong>{{ score }}</strong> out of <strong>{{ total }}</strong></p>
+
+    {% if score == total %}
+        <p class="message">🎉 Excellent! You got all answers correct!</p>
+    {% elif score >= half %}
+        <p class="message">👍 Good job! You did well.</p>
+    {% else %}
+        <p class="message">🧐 Keep practicing! You can do better next time.</p>
+    {% endif %}
+
+    <!-- ✅ Script to play audio after slight delay -->
+    <script>
+      window.addEventListener('DOMContentLoaded', function () {
+        const yay = document.getElementById("audio-yay");
+        const nice = document.getElementById("audio-nice");
+        const tryAgain = document.getElementById("audio-try");
+
+        setTimeout(() => {
+          {% if score == total %}
+              yay.play();
+          {% elif score >= half %}
+              nice.play();
+          {% else %}
+              tryAgain.play();
+          {% endif %}
+        }, 500);
+      });
+    </script>
+
+    <table class="results-table" border="1" cellpadding="8" cellspacing="0" style="width:100%; margin-top:20px;">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Your Answer</th>
+                <th>Correct Answer</th>
+                <th>Result</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in results %}
+                <tr>
+                    <td>{{ item.question.question_text }}</td>
+                    <td>
+                        {% if item.selected_text %}
+                            {{ item.selected_text }}
+                        {% else %}
+                            <em>No answer given</em>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.correct_text }}</td>
+                    <td style="color: {% if item.is_correct %}green{% else %}red{% endif %}; font-weight: bold;">
+                        {% if item.is_correct %}
+                            ✓ Correct
+                        {% else %}
+                            ✗ Wrong
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'home' %}" class="home-button" style="display:inline-block; margin-top:20px; color: black; font-weight:bold;  text-decoration:none;" onmouseover="this.style.color='#07536cff';" onmouseout="this.style.color='#43786fff';">Back to Home</a>
+</div>
+{% endblock %}

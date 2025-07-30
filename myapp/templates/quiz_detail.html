@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Quiz - {{ topic|title }}{% endblock %}
+
+{% block content %}
+<h2>{{ topic|title }} Quiz</h2>
+
+
+<audio id="click-sound" src="{% static 'css/audio/click.wav' %}" preload="auto"></audio>
+<audio id="button-sound" src="{% static 'css/audio/button.wav' %}" preload="auto"></audio>
+
+
+
+<form id="quizForm" method="post">
+    {% csrf_token %}
+
+    <div id="questions">
+        {% for field in form %}
+            <div class="question-box" id="question_{{ forloop.counter0 }}" style="{% if not forloop.first %}display: none;{% endif %}">
+                <p><strong>Q{{ forloop.counter }}:</strong> {{ field.label }}</p>
+                {% for subwidget in field.subwidgets %}
+                    <label>
+                        {{ subwidget.tag }}
+                        {{ subwidget.choice_label }}
+                    </label><br>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="navigation">
+        <button type="button" id="nextBtn">Next</button>
+        <button type="submit" id="submitBtn" style="display: none;">Submit</button>
+    </div>
+</form>
+
+<script>
+    let current = 0;
+    const questions = document.querySelectorAll(".question-box");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+
+    nextBtn.addEventListener("click", () => {
+        const currentBox = questions[current];
+        const selected = currentBox.querySelector("input:checked");
+
+        if (!selected) {
+            alert("Please select an option.");
+            return;
+        }
+
+        // Feedback: red for wrong, green for correct
+        const correct = selected.value === "{{ field.choices.0.0 }}";  // NOTE: dynamic correct checking is better with JS fetch or custom attribute
+
+        const radios = currentBox.querySelectorAll("input[type='radio']");
+        radios.forEach(radio => {
+            const label = radio.parentElement;
+            if (radio.checked) {
+                label.style.backgroundColor = (radio.value === radio.getAttribute("data-correct")) ? "lightgreen" : "#f8d7da";
+            } else if (radio.value === radio.getAttribute("data-correct")) {
+                label.style.backgroundColor = "lightgreen";
+            }
+        });
+
+        // Wait briefly then move to next
+        setTimeout(() => {
+            currentBox.style.display = "none";
+            current++;
+            if (current < questions.length) {
+                questions[current].style.display = "block";
+            } else {
+                nextBtn.style.display = "none";
+                submitBtn.style.display = "inline-block";
+            }
+        }, 500);
+    });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const clickSound = document.getElementById('click-sound');
+    const buttonSound = document.getElementById('button-sound');
+
+    // Play sound on radio button click
+    const answers = document.querySelectorAll('input[type="radio"]');
+    answers.forEach(answer => {
+      answer.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+      });
+    });
+
+    // Play button sound for all buttons except radio buttons
+    const allButtons = document.querySelectorAll('button');
+
+    allButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttonSound.currentTime = 0;
+        buttonSound.play();
+      });
+    });
+  });
+</script>
+
+
+
+
+<style>
+    .question-box {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    label {
+        display: block;
+        margin: 5px 0;
+        padding: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #navigation {
+        margin-top: 20px;
+    }
+
+    #navigation button {
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register as Student{% endblock %}
+
+{% block content %}
+<div class="welcome-card"> {# Re-using the welcome-card style for forms #}
+    <h2 style="text-align:center;">Register </h2>
+    <form method="post" >
+        {% csrf_token %}
+        {{ form.as_p }} {# Assuming your form is passed as 'form' context variable #}
+        <button type="submit" style="font-size:20px; color: black; font-weight:bold;  background-color: #86b5d2ff; padding: 10px 20px; border: none; cursor: pointer;" onmouseover="this.style.backgroundColor='#07536cff'" onmouseout="this.style.backgroundColor='#86b5d2ff'" >Register</button>
+    </form>
+    <p>Already have an account? <a href="{% url 'login' %}" style="text-decoration:none; color: #43786fff; font-weight:bold;" onmouseover="this.style.color='#07536cff';" onmouseout="this.style.color='#43786fff';">Login here</a>.</p>
+</div>
+{% endblock %}
